@@ -1,4 +1,10 @@
 # Visual Studio Code
 .vscode/
 
-demos/first/brick
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
