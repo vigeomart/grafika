@@ -1,5 +1,6 @@
 #include "matrix.h"
-
+#include <stdlib.h>
+#include <stdio.h>
 
 int main(){
     float identity_matrix[3][3];
@@ -17,4 +18,21 @@ int main(){
     shift(identity_matrix,3,0);
     rotate(identity_matrix,90);
     scale(identity_matrix,2,3);
+
+    item *valami = NULL;
+
+    push(&valami,matrix1);
+    push(&valami, matrix2);
+    printf("\n");
+    print_list(valami);
+
+    float kinyert[3][3];
+
+    pop(&valami,kinyert);
+
+    print_matrix(kinyert);
+    
+    pop(&valami,kinyert);
+
+    print_matrix(kinyert);
 }

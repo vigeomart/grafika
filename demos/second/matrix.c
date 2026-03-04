@@ -2,8 +2,7 @@
 #include "matrix.h"
 #include <stdio.h>
 #include <math.h>
-
-
+#include <stdlib.h>
 
 void init_identity_matrix (float matrix[3][3]){
     printf("Identikus matrix:\n");
@@ -36,10 +35,10 @@ void skalar_times(float matrix[3][3], float value){
     {
         for (int j = 0; j < 3; j++)
         {
-            matrix1[i][j] = eredmeny[i][j];
+            matrix[i][j] = eredmeny[i][j];
         }
     }
-    print_matrix(matrix1);
+    print_matrix(matrix);
 }
 void multiply_matrices(float matrix1[3][3], float matrix2 [3][3]){
     printf("Matrix szorzas:\n");
@@ -147,4 +146,50 @@ void rotate(float matrix[3][3],float fok){
     transz_matrix[1][1] = c;
 
     multiply_matrices(transz_matrix,matrix);
+}
+void push(item ** head, float matrix[3][3]){
+    item * new_item = (item*)malloc(sizeof(item));
+    
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            new_item->value[i][j] = matrix[i][j];
+        }
+    }
+    
+    new_item->next = *head;
+    *head = new_item;
+}
+int pop(item ** head, float kinyert_matrix[3][3]) {
+    item * next = NULL;
+
+    if (*head == NULL) {
+        return 0; 
+    }
+    
+    next = (*head)->next;
+   
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            kinyert_matrix[i][j] = (*head)->value[i][j];
+        }
+    }
+
+    free(*head);
+    
+    *head = next;
+    
+    return 1;
+}
+void print_list(item * head){
+    item * current = head;
+
+    while (current != NULL)
+    {
+        print_matrix(current->value);
+        printf("\n");
+        current = current->next;
+    }
+    
 }
