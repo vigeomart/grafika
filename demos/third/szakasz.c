@@ -8,14 +8,22 @@
 
 #define MAX_LINE_COUNT 100
 
+typedef struct line{
+    int start_x[MAX_LINE_COUNT];
+    int end_x[MAX_LINE_COUNT];
+    int start_y[MAX_LINE_COUNT];
+    int end_y[MAX_LINE_COUNT];
+}Line;
+
 int main(){
     int error_code;
     SDL_Window *window;
     bool need_run;
     SDL_Event event;   
     SDL_GLContext context;
-    int start_x,start_y;
-    int pozi[MAX_LINE_COUNT][4];
+    SDL_Renderer *renderer;
+    SDL_Rect square = {0,0,400,100}; 
+    Line points;
     int i = 0;
     bool has_start_point = false;
 
@@ -28,6 +36,8 @@ int main(){
     
     window = SDL_CreateWindow("Szakasz",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,800,600,SDL_WINDOW_OPENGL);
     context = SDL_GL_CreateContext(window);
+    renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, 800, 0, 600, -1, 1); // left, right, bottom, top
@@ -48,8 +58,8 @@ int main(){
                 SDL_MouseButtonEvent b = event.button;
                 if (b.button == SDL_BUTTON_LEFT )
                 {
-                   start_x = b.x;
-                   start_y = b.y;
+                   points.start_x[i] = b.x;
+                   points.start_y[i] = b.y;
                    has_start_point = true;
                 }
                 else if (b.button == SDL_BUTTON_RIGHT ){
@@ -58,10 +68,8 @@ int main(){
                         printf("Elsonek kell egy bal klikk!");
                     }
                     else if (i < MAX_LINE_COUNT){
-                        pozi[i][0] = start_x;
-                        pozi[i][1] = start_y;
-                        pozi[i][2] = b.x;
-                        pozi[i][3] = b.y;
+                        points.end_x[i] = b.x;
+                        points.end_y[i] = b.y;
                         i++;
                         has_start_point = false;
                     }
@@ -73,12 +81,13 @@ int main(){
         
     
         glClear(GL_COLOR_BUFFER_BIT);
-        glColor3f(1,1,1);
+        glColor3f(1,1,2);
         glBegin(GL_LINES);
+        
         for (int j = 0; j < i; j++)
         {
-            glVertex2f(pozi[j][0],600 - pozi[j][1]);
-            glVertex2f(pozi[j][2],600 - pozi[j][3]);
+            glVertex2f(points.start_x[j], 600 - points.start_y[j]);
+            glVertex2f(points.end_x[j], 600 - points.end_y[j]);
         }
         glEnd();
         SDL_GL_SwapWindow(window);
