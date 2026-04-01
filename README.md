@@ -1,6 +1,6 @@
-# Downhill game
+# Simple forest
 
-A simple cyclist game featuring a few downhill tracks.
+A simple forest walking featuring a bunker. 
 
 ## Features
 - Textures 
@@ -10,6 +10,6 @@ A simple cyclist game featuring a few downhill tracks.
 - Documentation 
 - Lights
 ---
-- Particles
+- Fog
 - Shadows
-- Crash test
+- Bounding box
