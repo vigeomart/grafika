@@ -5,34 +5,58 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <stdlib.h> 
+#include <time.h>   
 
-void drawCube() {
+#define NUM_TREES 70 
+#define WORLD_SIZE 40.0f 
+
+float getHeight(float x, float z) {
+    float h = 2.0f * sinf(x * 0.2f) * cosf(z * 0.2f);
+    float dist = sqrtf(x*x + z*z);
+    if (dist < 3.0f) {
+        h -= 2.0f * (3.0f - dist); 
+    }
+    return h;
+}
+
+void drawTerrain() {
+    float step = 1.0f; 
     glBegin(GL_QUADS);
-    // Elülső oldal (Piros)
-    glColor3f(1.0f, 0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f); glVertex3f( 1.0f, -1.0f,  1.0f); glVertex3f( 1.0f,  1.0f,  1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-    // Hátsó oldal (Zöld)
-    glColor3f(0.0f, 1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-    // Felső oldal (Kék)
-    glColor3f(0.0f, 0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); glVertex3f(-1.0f,  1.0f,  1.0f); glVertex3f( 1.0f,  1.0f,  1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-    // Alsó oldal (Sárga)
-    glColor3f(1.0f, 1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f); glVertex3f( 1.0f, -1.0f, -1.0f); glVertex3f( 1.0f, -1.0f,  1.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-    // Jobb oldal (Lila)
-    glColor3f(1.0f, 0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); glVertex3f( 1.0f,  1.0f,  1.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-    // Bal oldal (Cián)
-    glColor3f(0.0f, 1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f); glVertex3f(-1.0f, -1.0f,  1.0f); glVertex3f(-1.0f,  1.0f,  1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+    for (float x = -WORLD_SIZE; x < WORLD_SIZE; x += step) {
+        for (float z = -WORLD_SIZE; z < WORLD_SIZE; z += step) {
+            float h1 = getHeight(x, z);
+            float h2 = getHeight(x + step, z);
+            float h3 = getHeight(x + step, z + step);
+            float h4 = getHeight(x, z + step);
+            glColor3f(0.2f, 0.4f + h1 * 0.1f, 0.2f); 
+            glVertex3f(x, h1, z);
+            glVertex3f(x + step, h2, z);
+            glVertex3f(x + step, h3, z + step);
+            glVertex3f(x, h4, z + step);
+        }
+    }
     glEnd();
 }
 
-void drawFloor() {
-    glBegin(GL_LINES);
-    glColor3f(0.4f, 0.4f, 0.4f); 
-    for(float i = -20.0f; i <= 20.0f; i += 1.0f) {
-        glVertex3f(-20.0f, -1.0f, i);
-        glVertex3f( 20.0f, -1.0f, i);
-    
-        glVertex3f(i, -1.0f, -20.0f);
-        glVertex3f(i, -1.0f,  20.0f);
-    }
+void drawTree() {
+    glColor3f(0.4f, 0.2f, 0.0f); 
+    glBegin(GL_QUADS);
+    glVertex3f(-0.2f, 0.0f,  0.2f); glVertex3f( 0.2f, 0.0f,  0.2f);
+    glVertex3f( 0.2f, 1.5f,  0.2f); glVertex3f(-0.2f, 1.5f,  0.2f);
+    glVertex3f(-0.2f, 0.0f, -0.2f); glVertex3f(-0.2f, 1.5f, -0.2f);
+    glVertex3f( 0.2f, 1.5f, -0.2f); glVertex3f( 0.2f, 0.0f, -0.2f);
+    glVertex3f(-0.2f, 0.0f, -0.2f); glVertex3f(-0.2f, 0.0f,  0.2f);
+    glVertex3f(-0.2f, 1.5f,  0.2f); glVertex3f(-0.2f, 1.5f, -0.2f);
+    glVertex3f( 0.2f, 0.0f, -0.2f); glVertex3f( 0.2f, 1.5f, -0.2f);
+    glVertex3f( 0.2f, 1.5f,  0.2f); glVertex3f( 0.2f, 0.0f,  0.2f);
+    glEnd();
+    glColor3f(0.1f, 0.6f, 0.2f); 
+    glBegin(GL_TRIANGLES);
+    glVertex3f(-0.8f, 1.5f,  0.8f); glVertex3f( 0.8f, 1.5f,  0.8f); glVertex3f( 0.0f, 4.0f,  0.0f);
+    glVertex3f( 0.8f, 1.5f, -0.8f); glVertex3f(-0.8f, 1.5f, -0.8f); glVertex3f( 0.0f, 4.0f,  0.0f);
+    glVertex3f(-0.8f, 1.5f, -0.8f); glVertex3f(-0.8f, 1.5f,  0.8f); glVertex3f( 0.0f, 4.0f,  0.0f);
+    glVertex3f( 0.8f, 1.5f,  0.8f); glVertex3f( 0.8f, 1.5f, -0.8f); glVertex3f( 0.0f, 4.0f,  0.0f);
     glEnd();
 }
 
@@ -49,68 +73,130 @@ int main(int argc, char* argv[])
     window = SDL_CreateWindow("Jatek", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
     context = SDL_GL_CreateContext(window);
 
+    // EGÉR
+    // Kurzor rejtés
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+
     glViewport(0, 0, 800, 600);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.5f, 0.7f, 1.0f, 1.0f); 
 
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glFrustum(-1.0, 1.0, -0.75, 0.75, 1.0, 100.0);
-
+    glFrustum(-0.1, 0.1, -0.075, 0.075, 0.1, 100.0);
     glMatrixMode(GL_MODELVIEW);
 
-    float camX = 0.0f;       
-    float camZ = 5.0f;       
-    float camAngle = 0.0f;   
-    const float moveSpeed = 0.15f; 
-    const float rotSpeed = 2.5f;  
+    srand(time(NULL));
+    float treePositions[NUM_TREES][2];
+    float minDist = 2.2f; 
+    int placedTrees = 0;
+    int attempts = 0;
+
+    while (placedTrees < NUM_TREES && attempts < 3000) {
+        float newX = ((float)(rand() % ((int)WORLD_SIZE * 20)) / 10.0f) - WORLD_SIZE;
+        float newZ = ((float)(rand() % ((int)WORLD_SIZE * 20)) / 10.0f) - WORLD_SIZE;
+        bool collision = false;
+        float startDistX = newX - 0.0f;
+        float startDistZ = newZ - 5.0f;
+        if (sqrt(startDistX*startDistX + startDistZ*startDistZ) < 3.0f){
+                collision = true;
+            }
+        for (int j = 0; j < placedTrees; j++) {
+            float dx = newX - treePositions[j][0];
+            float dz = newZ - treePositions[j][1];
+            if (sqrt(dx*dx + dz*dz) < minDist) { 
+                    collision = true; break; 
+                }
+        }
+        if (!collision) {
+            treePositions[placedTrees][0] = newX;
+            treePositions[placedTrees][1] = newZ;
+            placedTrees++;
+        }
+        attempts++;
+    }
+
+    float camX = 0.0f, camZ = 5.0f;
+    float camAngle = 0.0f; // Yaw (vízszintes fordulás)
+    float pitch = 0.0f;    // Pitch (függőleges nézés)
+    
+    const float moveSpeed = 0.15f;
+    const float mouseSensitivity = 0.2f; // Érzékenység állítása itt
+    const float mapLimit = WORLD_SIZE - 1.0f; 
+    const float playerRadius = 0.8f; 
+
     while (need_run)
     {
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-                need_run = false;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) need_run = false;
+            
+            if (event.type == SDL_MOUSEMOTION) {
+                camAngle += event.motion.xrel * mouseSensitivity;
+                pitch += event.motion.yrel * mouseSensitivity;
+
+                // Korlátozzuk a fel-le nézést, hogy ne forduljunk át
+                if (pitch > 89.0f) pitch = 89.0f;
+                if (pitch < -89.0f) pitch = -89.0f;
+            }
         }
 
         const Uint8 *state = SDL_GetKeyboardState(NULL);
-        float rad = camAngle * M_PI / 180.0f; 
+        float rad = camAngle * M_PI / 180.0f;
         
-        if (state[SDL_SCANCODE_W]) {
-            camX += sin(rad) * moveSpeed;
-            camZ -= cos(rad) * moveSpeed;
-        }
-        if (state[SDL_SCANCODE_S]) {
-            camX -= sin(rad) * moveSpeed;
-            camZ += cos(rad) * moveSpeed;
-        }
-        
-        if (state[SDL_SCANCODE_A]) {
-            camX -= cos(rad) * moveSpeed; 
-            camZ -= sin(rad) * moveSpeed;
-        }
-        if (state[SDL_SCANCODE_D]) {
-            camX += cos(rad) * moveSpeed; 
-            camZ += sin(rad) * moveSpeed;
-        }
+        float moveX = 0.0f;
+        float moveZ = 0.0f;
 
-        if (state[SDL_SCANCODE_LEFT]) {
-            camAngle -= rotSpeed;
+        // A mozgás irányát továbbra is a camAngle (vízszintes szög) határozza meg
+        if (state[SDL_SCANCODE_W]) { moveX += sin(rad) * moveSpeed; moveZ -= cos(rad) * moveSpeed; }
+        if (state[SDL_SCANCODE_S]) { moveX -= sin(rad) * moveSpeed; moveZ += cos(rad) * moveSpeed; }
+        if (state[SDL_SCANCODE_A]) { moveX -= cos(rad) * moveSpeed; moveZ -= sin(rad) * moveSpeed; }
+        if (state[SDL_SCANCODE_D]) { moveX += cos(rad) * moveSpeed; moveZ += sin(rad) * moveSpeed; }
+
+        //ÜTKÖZÉS ÉS MOZGÁS
+        float nextX = camX + moveX;
+        bool collisionX = false;
+        if (nextX < -mapLimit || nextX > mapLimit) collisionX = true;
+        for (int i = 0; i < placedTrees; i++) {
+            float dx = nextX - treePositions[i][0];
+            float dz = camZ - treePositions[i][1];
+            if (sqrt(dx*dx + dz*dz) < playerRadius) { collisionX = true; break; }
         }
-        if (state[SDL_SCANCODE_RIGHT]) {
-            camAngle += rotSpeed;
+        if (!collisionX) camX = nextX;
+
+        float nextZ = camZ + moveZ;
+        bool collisionZ = false;
+        if (nextZ < -mapLimit || nextZ > mapLimit) collisionZ = true;
+        for (int i = 0; i < placedTrees; i++) {
+            float dx = camX - treePositions[i][0];
+            float dz = nextZ - treePositions[i][1];
+            if (sqrt(dx*dx + dz*dz) < playerRadius) { collisionZ = true; break; }
         }
-        
-        if (camAngle >= 360.0f) camAngle -= 360.0f;
-        if (camAngle < 0.0f) camAngle += 360.0f;
+        if (!collisionZ) camZ = nextZ;
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-        glLoadIdentity(); 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
 
-        glRotatef(camAngle, 0.0f, 1.0f, 0.0f); 
-        glTranslatef(-camX, 0.0f, -camZ);       
+        //KAMERA TRANSZFORMÁCIÓ
+        float groundHeight = getHeight(camX, camZ);
+        float eyeLevel = 1.2f; 
+        float currentCamY = groundHeight + eyeLevel;
 
-        drawFloor(); 
-        drawCube();
+        //Fel-le nézés (X tengely körüli forgatás)
+        glRotatef(pitch, 1.0f, 0.0f, 0.0f);
+        //Oldalra nézés (Y tengely körüli forgatás)
+        glRotatef(camAngle, 0.0f, 1.0f, 0.0f);
+        //Elmozdulás a pozícióba
+        glTranslatef(-camX, -currentCamY, -camZ); 
+
+        drawTerrain();
+
+        for(int i = 0; i < placedTrees; i++) {
+            glPushMatrix();
+            float h = getHeight(treePositions[i][0], treePositions[i][1]);
+            glTranslatef(treePositions[i][0], h, treePositions[i][1]); 
+            drawTree();
+            glPopMatrix();
+        }
 
         SDL_GL_SwapWindow(window);
         SDL_Delay(16);
