@@ -11,6 +11,8 @@ typedef struct Ball
     float radius;
     float speed_x;
     float speed_y;
+    float rotation;
+    float rotation_speed;
 } Ball;
 
 /**

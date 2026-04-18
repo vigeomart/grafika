@@ -16,6 +16,8 @@ typedef struct Pong
     Ball ball;
     Pad left_pad;
     Pad right_pad;
+    int score_left;
+    int score_right;
 } Pong;
 
 /**
@@ -57,5 +59,7 @@ void set_right_pad_speed(Pong* pong, float speed);
  * Bounce the ball when necessary.
  */
 void bounce_ball(Pong* pong);
+
+void render_digit(int digit, float x, float y, float size);
 
 #endif /* PONG_H */
