@@ -108,7 +108,6 @@ int main(int argc, char* argv[])
         applySkyAndLighting(); 
         applyCameraView(1.2f); 
         
-        // MÓDOSÍTVA: Átadjuk a betöltött modellt a rajzoló függvénynek
         renderSun(sunModel);
         
         drawTerrain(grassDiffuseTex);
@@ -125,10 +124,8 @@ int main(int argc, char* argv[])
     glDeleteTextures(1, &helpTex);
     glDeleteTextures(1, &grassDiffuseTex);
     
-    // --- ÚJ: NAP MEMÓRIA TÖRLÉSE ---
     glDeleteTextures(1, &sunTex);
     glDeleteLists(sunModel, 1);
-    // -------------------------------
     
     IMG_Quit();
     SDL_GL_DeleteContext(context);

@@ -3,7 +3,6 @@
 #include <GL/gl.h>
 #include <math.h>
 
-bool is_time_flowing = false; 
 float time_of_day = 0.0f;     
 float sunRadius = 40.0f;      
 float light_intensity = 1.0f;
@@ -71,16 +70,13 @@ void renderSun(GLuint sunModel) {
     float sunZ = -20.0f;
 
     glPushMatrix();
-        glDisable(GL_LIGHTING); // A Nap maga a fény, ne legyen sötét oldala
-        
-        glEnable(GL_TEXTURE_2D); // Biztosítjuk, hogy a textúra engedélyezve legyen
-        
+        glDisable(GL_LIGHTING);         
+        glEnable(GL_TEXTURE_2D);         
         glTranslatef(sunX, sunY, sunZ);
         
         glScalef(0.00015f, 0.00015f, 0.00015f);        
-        glColor3f(1.0f, 1.0f, 1.0f); // Fehér szín, hogy a JPG eredeti színeit kapjuk vissza
-        
-        glCallList(sunModel); // A te .obj modelled kirajzolása
+        glColor3f(1.0f, 1.0f, 1.0f);        
+        glCallList(sunModel); 
         
         glEnable(GL_LIGHTING);
     glPopMatrix();
