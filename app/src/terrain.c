@@ -3,7 +3,7 @@
 #include <math.h>
 
 float getHeight(float x, float z) {
-    float h = 2.0f * sinf(x * 0.2f) * cosf(z * 0.2f);
+    float h = 1.0f * sinf(x * 0.2f) * cosf(z * 0.2f);
     float dist = sqrtf(x*x + z*z);
     if (dist < 3.0f) {
         h -= 1.0f * (3.0f - dist); 
@@ -12,7 +12,7 @@ float getHeight(float x, float z) {
 }
 
 void drawTerrain(GLuint groundTex) {
-    float step = 1.0f; 
+    float step = 0.5f; 
     float texScale = 0.5f; 
 
     glEnable(GL_TEXTURE_2D);

@@ -118,7 +118,6 @@ int main(int argc, char* argv[])
         }
 
         SDL_GL_SwapWindow(window);
-        SDL_Delay(16);
     }
 
     glDeleteTextures(1, &helpTex);
